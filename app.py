@@ -7,7 +7,7 @@
 help - ok.jpg
 milan - andré sola
 dollarumma - $
-crudeli - boa!teng!teng!teng!
+crudeli - boa! teng! teng! teng!
 pogba - 30!
 switch - modalità molesta on/off
     
@@ -28,24 +28,35 @@ def start(bot, update):
     update.message.reply_text('A regazzì, e mo vo buco sto pallone')
     
 def herupu(bot, update):
-    update.message.reply_text('Che?')
+    update.message.reply_text('Nella modalità molesta non è necessario inserire /<comando> per attivare il bot')
 
 def milan(bot, update):
     update.message.reply_photo("https://www.calciomercato.it/imagesArticleBig/6/8/0/d/185332.jpg")
 
 def dollarumma(bot, update):
-    update.message.reply_photo("https://content.fantagazzetta.com/web/img/1150x532/7ee14989-af70-4bd9-8b18-e4e58bf6c0d2.jpg")
+    update.message.reply_photo('https://content.fantagazzetta.com/web/img/1150x532/7ee14989-af70-4bd9-8b18-e4e58bf6c0d2.jpg')
 
 def crudeli(bot, update):
-    update.message.reply_photo("http://www.cittaceleste.it/wp-content/uploads/sites/6/2015/10/CRUDELI23.jpg")
+    update.message.reply_photo('http://www.cittaceleste.it/wp-content/uploads/sites/6/2015/10/CRUDELI23.jpg')
 
 def pogba(bot, update):
     update.message.reply_text('30!')
 
 def scan(bot, update):
-    message = re.search(r'\bmilan\b', update.message.text, flags=re.IGNORECASE)
-    if message != None:
-        milan(bot, update)
+    keywords = ['milan','dollarumma','donnarumma','crudeli','pogba']
+    for i, v in enumerate(keywords):
+        match = re.search(r'\b{}\b'.format(v) , update.message.text, flags=re.IGNORECASE)
+        if match:
+            if i == 0:
+                milan(bot, update)
+            elif 1 <= i <= 2:
+                dollarumma(bot,update)
+                print(i)
+            elif i == 3:
+                crudeli(bot, update)
+            else:
+                pogba(bot,update)
+
 
 def switch(bot, update):
     global dp
