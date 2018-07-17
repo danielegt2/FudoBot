@@ -6,6 +6,8 @@
     
 help - ok.jpg
 milan - andré sola
+dollarumma - $
+crudeli - boa!teng!teng!teng!
 pogba - 30!
 switch - modalità molesta on/off
     
@@ -30,6 +32,12 @@ def herupu(bot, update):
 
 def milan(bot, update):
     update.message.reply_photo("https://www.calciomercato.it/imagesArticleBig/6/8/0/d/185332.jpg")
+
+def dollarumma(bot, update):
+    update.message.reply_photo("https://content.fantagazzetta.com/web/img/1150x532/7ee14989-af70-4bd9-8b18-e4e58bf6c0d2.jpg")
+
+def crudeli(bot, update):
+    update.message.reply_photo("http://www.cittaceleste.it/wp-content/uploads/sites/6/2015/10/CRUDELI23.jpg")
 
 def pogba(bot, update):
     update.message.reply_text('30!')
@@ -69,6 +77,8 @@ def main():
     dp.add_handler(CommandHandler("help", herupu))
     dp.add_handler(CommandHandler("milan", milan))
     dp.add_handler(CommandHandler("pogba", pogba))
+    dp.add_handler(CommandHandler("dollarumma", dollarumma))
+    dp.add_handler(CommandHandler("crudeli", crudeli))
     global molesta
     molesta = True
     global scanhandler
