@@ -51,7 +51,6 @@ def scan(bot, update):
                 milan(bot, update)
             elif 1 <= i <= 2:
                 dollarumma(bot,update)
-                print(i)
             elif i == 3:
                 crudeli(bot, update)
             else:
