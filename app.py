@@ -25,10 +25,14 @@ logger = logging.getLogger(__name__)
 # Define a few command handlers. These usually take the two arguments bot and
 # update. Error handlers also receive the raised TelegramError object in error.
 def start(bot, update):
-    update.message.reply_text('A regazzì, e mo vo buco sto pallone')
+    update.message.reply_text('A regazzì, e mo vo buco sto pallone.')
     
 def herupu(bot, update):
-    update.message.reply_text('Nella modalità molesta non è necessario inserire /<comando> per attivare il bot')
+    reply = 'Nella modalità molesta non è necessario inserire /<comando> per attivare il bot.'
+    if molesta == True:
+        update.message.reply_text(reply + '\nModalità molesta ON.')
+    else:
+    	update.message.reply_text(reply + '\nModalità molesta OFF.')
 
 def milan(bot, update):
     update.message.reply_photo("https://www.calciomercato.it/imagesArticleBig/6/8/0/d/185332.jpg")
@@ -43,7 +47,7 @@ def pogba(bot, update):
     update.message.reply_text('30!')
 
 def scan(bot, update):
-    keywords = ['milan','dollarumma','donnarumma','crudeli','pogba']
+    global keywords
     for i, v in enumerate(keywords):
         match = re.search(r'\b{}\b'.format(v) , update.message.text, flags=re.IGNORECASE)
         if match:
@@ -64,11 +68,11 @@ def switch(bot, update):
     if molesta == True:
         molesta = False
         dp.remove_handler(scanhandler)
-        update.message.reply_text('modalità molesta OFF')
+        update.message.reply_text('Modalità molesta OFF.')
     else:
         molesta = True
         dp.add_handler(scanhandler)
-        update.message.reply_text('modalità molesta ON')
+        update.message.reply_text('Modalità molesta ON.')
 
 def error(bot, update, error):
     """Log Errors caused by Updates."""
@@ -79,8 +83,7 @@ def main():
     updater = Updater("664394810:AAEQ1dVh2UoHdDtBz3aHplTrKIRDyPgBuuA")
 
     # Get the dispatcher to register handlers
-    global dp
-    dp = updater.dispatcher
+    global dp = updater.dispatcher
 
     # on different commands - answer in Telegram
     dp.add_handler(CommandHandler("start", start))
@@ -89,10 +92,9 @@ def main():
     dp.add_handler(CommandHandler("pogba", pogba))
     dp.add_handler(CommandHandler("dollarumma", dollarumma))
     dp.add_handler(CommandHandler("crudeli", crudeli))
-    global molesta
-    molesta = True
-    global scanhandler
-    scanhandler = MessageHandler(Filters.text, scan)
+    global molesta = True
+    global keywords = ['milan','dollarumma','donnarumma','crudeli','pogba']
+    global scanhandler = MessageHandler(Filters.text, scan)
     dp.add_handler(scanhandler)
     dp.add_handler(CommandHandler("switch", switch))
     
