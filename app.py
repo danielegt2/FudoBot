@@ -83,7 +83,8 @@ def main():
     updater = Updater("664394810:AAEQ1dVh2UoHdDtBz3aHplTrKIRDyPgBuuA")
 
     # Get the dispatcher to register handlers
-    global dp = updater.dispatcher
+    global dp
+    dp = updater.dispatcher
 
     # on different commands - answer in Telegram
     dp.add_handler(CommandHandler("start", start))
@@ -92,9 +93,12 @@ def main():
     dp.add_handler(CommandHandler("pogba", pogba))
     dp.add_handler(CommandHandler("dollarumma", dollarumma))
     dp.add_handler(CommandHandler("crudeli", crudeli))
-    global molesta = True
-    global keywords = ['milan','dollarumma','donnarumma','crudeli','pogba']
-    global scanhandler = MessageHandler(Filters.text, scan)
+    global molesta
+    molesta = True
+    global keywords
+    keywords = ['milan','dollarumma','donnarumma','crudeli','pogba']
+    global scanhandler
+    scanhandler = MessageHandler(Filters.text, scan)
     dp.add_handler(scanhandler)
     dp.add_handler(CommandHandler("switch", switch))
     
