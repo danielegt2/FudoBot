@@ -1,20 +1,20 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-"""
+'''
     FudoBot
     lista comandi:
     
 help - ok.jpg
-milan - andré sola
+cavani - <3
+pogba - 30!
+milan - brocchi
+sola - andré silva
 dollarumma - $
 crudeli - boa! teng! teng! teng!
-pogba - 30!
 switch - modalità molesta on/off
     
-"""
+'''
 
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
-import logging, re
+import logging, re, random
 
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -29,43 +29,60 @@ def start(bot, update):
     
 def herupu(bot, update):
     reply = 'Nella modalità molesta non è necessario inserire /<comando> per attivare il bot.'
-    if molesta == True:
+    if molesta:
         update.message.reply_text(reply + '\nModalità molesta ON.')
     else:
-    	update.message.reply_text(reply + '\nModalità molesta OFF.')
+        update.message.reply_text(reply + '\nModalità molesta OFF.')
 
-def milan(bot, update):
-    update.message.reply_photo("https://www.calciomercato.it/imagesArticleBig/6/8/0/d/185332.jpg")
+def send_sticker(update, sticker_pack):
+    update.message.reply_sticker(random.SystemRandom().choice(sticker_pack))
 
-def dollarumma(bot, update):
-    update.message.reply_photo('https://content.fantagazzetta.com/web/img/1150x532/7ee14989-af70-4bd9-8b18-e4e58bf6c0d2.jpg')
-
-def crudeli(bot, update):
-    update.message.reply_photo('http://www.cittaceleste.it/wp-content/uploads/sites/6/2015/10/CRUDELI23.jpg')
+def cavani(bot, update):
+    fudo_cavani = bot.get_sticker_set('FudoCavani').stickers
+    send_sticker(update, fudo_cavani)
 
 def pogba(bot, update):
     update.message.reply_text('30!')
 
+def milan(bot, update):
+    fudo_milan = bot.get_sticker_set('FudoMilan').stickers
+    send_sticker(update, fudo_milan)
+    
+def sola(bot, update):
+    fudo_sola = bot.get_sticker_set('FudoSola').stickers
+    send_sticker(update, fudo_sola)
+
+def dollarumma(bot, update):
+     fudo_dollarumma = bot.get_sticker_set('FudoDollarumma').stickers
+     send_sticker(update, fudo_dollarumma)
+
+def crudeli(bot, update):
+    fudo_crudeli = bot.get_sticker_set('FudoCrudeli').stickers
+    send_sticker(update, fudo_crudeli)
+
 def scan(bot, update):
     global keywords
     for i, v in enumerate(keywords):
-        match = re.search(r'\b{}\b'.format(v) , update.message.text, flags=re.IGNORECASE)
+        match = re.search(r'\b{}\b'.format(v), update.message.text, flags=re.IGNORECASE)
         if match:
             if i == 0:
-                milan(bot, update)
+                pogba(bot, update)
             elif 1 <= i <= 2:
-                dollarumma(bot,update)
+                milan(bot, update)
             elif i == 3:
+                sola(bot, update)
+            elif 4 <= i <= 5:
+                dollarumma(bot,update)
+            elif i == 6:
                 crudeli(bot, update)
             else:
-                pogba(bot,update)
-
+                cavani(bot, update)
 
 def switch(bot, update):
     global dp
     global molesta
     global scanhandler
-    if molesta == True:
+    if molesta:
         molesta = False
         dp.remove_handler(scanhandler)
         update.message.reply_text('Modalità molesta OFF.')
@@ -75,7 +92,7 @@ def switch(bot, update):
         update.message.reply_text('Modalità molesta ON.')
 
 def error(bot, update, error):
-    """Log Errors caused by Updates."""
+    # Log Errors caused by Updates.
     logger.warning('Update "%s" caused error "%s"', update, error)
 
 def main():
@@ -87,16 +104,18 @@ def main():
     dp = updater.dispatcher
 
     # on different commands - answer in Telegram
-    dp.add_handler(CommandHandler("start", start))
-    dp.add_handler(CommandHandler("help", herupu))
-    dp.add_handler(CommandHandler("milan", milan))
-    dp.add_handler(CommandHandler("pogba", pogba))
-    dp.add_handler(CommandHandler("dollarumma", dollarumma))
-    dp.add_handler(CommandHandler("crudeli", crudeli))
+    dp.add_handler(CommandHandler('start', start))
+    dp.add_handler(CommandHandler('help', herupu))
+    dp.add_handler(CommandHandler('pogba', pogba))
+    dp.add_handler(CommandHandler('milan', milan))
+    dp.add_handler(CommandHandler('sola', sola))
+    dp.add_handler(CommandHandler('dollarumma', dollarumma))
+    dp.add_handler(CommandHandler('crudeli', crudeli))
+    dp.add_handler(CommandHandler('cavani', cavani))
+    global keywords
+    keywords = ['pogba','milan','milanista','sola','dollarumma','donnarumma','crudeli','cavani']
     global molesta
     molesta = True
-    global keywords
-    keywords = ['milan','dollarumma','donnarumma','crudeli','pogba']
     global scanhandler
     scanhandler = MessageHandler(Filters.text, scan)
     dp.add_handler(scanhandler)
