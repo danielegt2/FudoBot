@@ -5,6 +5,7 @@
 help - ok.jpg
 cavani - <3
 pogba - 30!
+lasagna - <3
 milan - brocchi
 sola - andré silva
 dollarumma - $
@@ -34,6 +35,10 @@ def herupu(bot, update):
     else:
         update.message.reply_text(reply + '\nModalità molesta OFF.')
 
+def error(bot, update, error):
+    # Log Errors caused by Updates.
+    logger.warning('Update "%s" caused error "%s"', update, error)
+
 def send_sticker(update, sticker_pack):
     update.message.reply_sticker(random.SystemRandom().choice(sticker_pack))
 
@@ -42,7 +47,8 @@ def cavani(bot, update):
     send_sticker(update, fudo_cavani)
 
 def pogba(bot, update):
-    update.message.reply_text('30!')
+    fudo_pogba = bot.get_sticker_set('FudoPogba').stickers
+    send_sticker(update, fudo_pogba)
 
 def milan(bot, update):
     fudo_milan = bot.get_sticker_set('FudoMilan').stickers
@@ -60,23 +66,16 @@ def crudeli(bot, update):
     fudo_crudeli = bot.get_sticker_set('FudoCrudeli').stickers
     send_sticker(update, fudo_crudeli)
 
+def lasagna(bot, update):
+    fudo_lasagna = bot.get_sticker_set('FudoLasagna').stickers
+    send_sticker(update, fudo_lasagna)
+
 def scan(bot, update):
-    global keywords
-    for i, v in enumerate(keywords):
-        match = re.search(r'\b{}\b'.format(v), update.message.text, flags=re.IGNORECASE)
+    global trigger_words
+    for k in trigger_words:
+        match = re.search(r'\b{}\b'.format(k), update.message.text, flags=re.IGNORECASE)
         if match:
-            if i == 0:
-                pogba(bot, update)
-            elif 1 <= i <= 2:
-                milan(bot, update)
-            elif i == 3:
-                sola(bot, update)
-            elif 4 <= i <= 5:
-                dollarumma(bot,update)
-            elif i == 6:
-                crudeli(bot, update)
-            else:
-                cavani(bot, update)
+            trigger_words[k](bot, update)
 
 def switch(bot, update):
     global dp
@@ -91,13 +90,10 @@ def switch(bot, update):
         dp.add_handler(scanhandler)
         update.message.reply_text('Modalità molesta ON.')
 
-def error(bot, update, error):
-    # Log Errors caused by Updates.
-    logger.warning('Update "%s" caused error "%s"', update, error)
 
 def main():
     # Create the EventHandler and pass it your bot's token.
-    updater = Updater("664394810:AAEQ1dVh2UoHdDtBz3aHplTrKIRDyPgBuuA")
+    updater = Updater('664394810:AAEQ1dVh2UoHdDtBz3aHplTrKIRDyPgBuuA')
 
     # Get the dispatcher to register handlers
     global dp
@@ -106,14 +102,18 @@ def main():
     # on different commands - answer in Telegram
     dp.add_handler(CommandHandler('start', start))
     dp.add_handler(CommandHandler('help', herupu))
+
     dp.add_handler(CommandHandler('pogba', pogba))
     dp.add_handler(CommandHandler('milan', milan))
     dp.add_handler(CommandHandler('sola', sola))
     dp.add_handler(CommandHandler('dollarumma', dollarumma))
     dp.add_handler(CommandHandler('crudeli', crudeli))
     dp.add_handler(CommandHandler('cavani', cavani))
-    global keywords
-    keywords = ['pogba','milan','milanista','sola','dollarumma','donnarumma','crudeli','cavani']
+    dp.add_handler(CommandHandler('lasagna', lasagna))
+    global trigger_words
+    trigger_words = {'pogba': pogba,'milan': milan,'milanista': milan,'sola': sola,
+        'silva': sola,'dollarumma': dollarumma,'donnarumma': dollarumma,'crudeli': crudeli,
+        'cavani': cavani, 'lasagna': lasagna}
     global molesta
     molesta = True
     global scanhandler
@@ -134,3 +134,5 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+# the end.
