@@ -1,18 +1,6 @@
-'''
-    FudoBot
-    lista comandi:
-    
-help - ok.jpg
-cavani - <3
-pogba - 30!
-lasagna - <3
-milan - brocchi
-sola - andré silva
-dollarumma - $
-crudeli - boa! teng! teng! teng!
-switch - modalità molesta on/off
-    
-'''
+#
+#	FudoBot by Danielys
+#
 
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 import logging, re, random
@@ -25,19 +13,28 @@ logger = logging.getLogger(__name__)
 
 # Define a few command handlers. These usually take the two arguments bot and
 # update. Error handlers also receive the raised TelegramError object in error.
+def error(bot, update, error):
+    # Log Errors caused by Updates.
+    logger.warning('Update "%s" caused error "%s"', update, error)
+
 def start(bot, update):
     update.message.reply_text('A regazzì, e mo vo buco sto pallone.')
     
-def herupu(bot, update):
-    reply = 'Nella modalità molesta non è necessario inserire /<comando> per attivare il bot.'
+def aiuto(bot, update):
+    reply = (
+    	'Ciao regazzì, sono il Fudo Bot!'
+    	'\nPosto stronzate del FantaCalcio by Fudo.'
+    	'\n\nAggiungi i Fudo sticker:\nhttps://t.me/addstickers/FudoSubs'
+    	'\n\nE usa questi comandi per controllarmi:'
+    	'\n/help - per QI sotto i 90\n/cavani - <3\n/pogba - 30!\n/lasagna - <3'
+    	'\n/milan - brocchi\n/sola - andré silva\n/dollarumma - $'
+    	'\n/crudeli - boa! teng! teng! teng!\n/switch - modalità molesta on/off'
+    	'\n\nNella modalità molesta non è necessario inserire /<comando> per attivare il bot.'
+    )
     if molesta:
         update.message.reply_text(reply + '\nModalità molesta ON.')
     else:
         update.message.reply_text(reply + '\nModalità molesta OFF.')
-
-def error(bot, update, error):
-    # Log Errors caused by Updates.
-    logger.warning('Update "%s" caused error "%s"', update, error)
 
 def send_sticker(update, sticker_pack):
     update.message.reply_sticker(random.SystemRandom().choice(sticker_pack))
@@ -101,7 +98,7 @@ def main():
 
     # on different commands - answer in Telegram
     dp.add_handler(CommandHandler('start', start))
-    dp.add_handler(CommandHandler('help', herupu))
+    dp.add_handler(CommandHandler('help', aiuto))
 
     dp.add_handler(CommandHandler('pogba', pogba))
     dp.add_handler(CommandHandler('milan', milan))
@@ -111,9 +108,11 @@ def main():
     dp.add_handler(CommandHandler('cavani', cavani))
     dp.add_handler(CommandHandler('lasagna', lasagna))
     global trigger_words
-    trigger_words = {'pogba': pogba,'milan': milan,'milanista': milan,'sola': sola,
-        'silva': sola,'dollarumma': dollarumma,'donnarumma': dollarumma,'crudeli': crudeli,
-        'cavani': cavani, 'lasagna': lasagna}
+    trigger_words = {
+    	'pogba': pogba, 'milan': milan, 'milanista': milan, 'sola': sola,
+    	'silva': sola, 'dollarumma': dollarumma, 'donnarumma': dollarumma,
+    	'crudeli': crudeli, 'cavani': cavani, 'lasagna': lasagna
+    }
     global molesta
     molesta = True
     global scanhandler
