@@ -79,14 +79,13 @@ def switch(bot, update):
     global molesta
     global scanhandler
     if molesta:
-        molesta = False
         dp.remove_handler(scanhandler)
+        molesta = False
         update.message.reply_text('Modalità molesta OFF.')
     else:
-        molesta = True
         dp.add_handler(scanhandler)
-        update.message.reply_text('Modalità molesta ON.')
-
+        molesta = True
+        update.message.reply_text('Modalità molesta ON.')        
 
 def main():
     # Create the EventHandler and pass it your bot's token.
@@ -109,16 +108,16 @@ def main():
     dp.add_handler(CommandHandler('lasagna', lasagna))
     global trigger_words
     trigger_words = {
-    	'pogba': pogba, 'milan': milan, 'milanista': milan, 'sola': sola,
-    	'silva': sola, 'dollarumma': dollarumma, 'donnarumma': dollarumma,
-    	'crudeli': crudeli, 'cavani': cavani, 'lasagna': lasagna
+    	'pogba': pogba, 'milan': milan, 'milanista': milan, 'sola': sola, 'silva': sola,
+        'dollarumma': dollarumma, 'donnarumma': dollarumma, 'crudeli': crudeli, 'cavani': cavani,
+        'lasagna': lasagna, 'matador': cavani
     }
     global molesta
     molesta = True
     global scanhandler
     scanhandler = MessageHandler(Filters.text, scan)
     dp.add_handler(scanhandler)
-    dp.add_handler(CommandHandler("switch", switch))
+    dp.add_handler(CommandHandler('switch', switch))
     
     # log all errors
     dp.add_error_handler(error)
