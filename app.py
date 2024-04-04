@@ -1,5 +1,5 @@
 #
-#	FudoBot by Danielys
+#	FudoBot by danielegt2
 #
 
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
